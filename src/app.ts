@@ -7,6 +7,7 @@ export const port = +(process.env.PORT || 1337);
 
 const app = express();
 
-app.use(expressPinoLogger({ logger: log }));
+app
+  .use(expressPinoLogger({ logger: log }));
 
 export default app;

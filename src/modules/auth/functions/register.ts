@@ -1,5 +1,5 @@
 import * as admin from "firebase-admin";
-import { errors } from "../../../utils/response";
+import { errors } from "graphql-response-parser";
 import { auth } from "../../../vendors/firebase";
 import CreateRequest = admin.auth.CreateRequest;
 import UserRecord = admin.auth.UserRecord;

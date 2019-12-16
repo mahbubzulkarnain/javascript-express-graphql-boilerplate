@@ -4,7 +4,7 @@ import { merge } from "lodash";
 import context from "./configs/context";
 
 const ENV = (process.env.NODE_ENV || "dev").toLowerCase();
-const DEV = ENV !== "prod" && ENV !== "production";
+const DEV = (ENV !== "prod") && (ENV !== "production");
 
 const dirmodules = `${__dirname}/modules`;
 const modules = fs.readdirSync(dirmodules)
@@ -16,7 +16,15 @@ const modules = fs.readdirSync(dirmodules)
 const resources = (file) => {
   const path = `${dirmodules}/${file}`;
   if (fs.existsSync(path + ".ts")) {
-    return require(path);
+    if (file.includes("datasources")) {
+      const fn = require(path).default;
+      let fnName = (fn.toString().match(/function\s+([^\s(]+)/));
+      fnName = (fnName && fnName.length) ? fnName[1] : (new fn()).constructor.name;
+      fnName = fnName.charAt(0).toLowerCase() + fnName.substring(1);
+      return { default: { [fnName]: new fn() } };
+    } else {
+      return require(path);
+    }
   }
   if (fs.existsSync(path)) {
     return {
@@ -26,18 +34,26 @@ const resources = (file) => {
       ), {}),
     };
   }
+  return { default: {} };
 };
 
 export const graphqlPath = "/graphql";
 
+export const resolvers = modules
+  .reduce((result, item) => merge(result, resources(item + "/resolvers").default), {});
+export const schemaDirectives = modules
+  .reduce((result, item) => merge(result, resources(item + "/directives").default), {});
+export const typeDefs = modules
+  .map((item) => resources(item + "/schema").default);
+export const schema = makeExecutableSchema({ resolvers, schemaDirectives, typeDefs });
+export const dataSources = () => modules
+  .reduce((result, item) => merge(result, resources(item + "/datasources")), {}).default;
+
 export default (new ApolloServer({
   context,
+  dataSources,
   debug     : DEV,
   playground: { settings: { "editor.theme": "light" } },
-  schema    : makeExecutableSchema({
-    resolvers       : modules.reduce((result, item) => merge(result, resources(item + "/resolvers").default), {}),
-    schemaDirectives: modules.reduce((result, item) => merge(result, resources(item + "/directives").default), {}),
-    typeDefs        : modules.map((item) => resources(item + "/schema").default),
-  }),
+  schema,
   tracing   : DEV,
 }));

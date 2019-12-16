@@ -7,8 +7,8 @@ class AuthDirective extends SchemaDirectiveVisitor {
     const { resolve = defaultFieldResolver } = field;
     // const { roles } = this.args;
     field.resolve = async function(...args) {
-      const [, {}, authUser] = args;
-      if (!authUser || !authUser.email || !authUser.token) {
+      const [, {}, { user, token }] = args;
+      if (!user || !user.email || !token) {
         throw new AuthenticationError("Unauthorized");
       }
       return await resolve.apply(this, args);

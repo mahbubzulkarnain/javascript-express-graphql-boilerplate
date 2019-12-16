@@ -1,4 +1,10 @@
+import { IServiceAPI } from "./IDataSources";
+
 export interface IContext {
-  email?: string;
+  req?: any;
+  res?: any;
+  DEV?: boolean;
   token?: string;
+  user?: any;
+  dataSources?: IServiceAPI;
 }

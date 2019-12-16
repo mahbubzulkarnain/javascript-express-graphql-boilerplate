@@ -3,7 +3,7 @@
     "outDir": "dist",
     "sourceMap": true,
     "module": "commonjs",
-    "target": "es5",
+    "target": "es2019",
     "lib": [
       "es7",
       "dom"
@@ -19,7 +19,8 @@
     "theme": "default"
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "node_modules/@types/jest/index.d.ts"
   ],
   "exclude": [
     "__tests__",

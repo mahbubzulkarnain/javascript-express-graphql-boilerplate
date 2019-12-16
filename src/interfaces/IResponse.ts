@@ -1,4 +1,4 @@
-interface IPageInfo {
+export interface IPageInfo {
   nextCursor: string | null;
   prevCursor: string | null;
   hasNextPage: boolean;

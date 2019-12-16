@@ -1,13 +1,13 @@
 try {
-  require('dotenv').config();
+  require("dotenv").config(); // tslint:disable-line:no-var-requires
 } catch (e) {
   log.error(errors(e));
 }
 
-import graphql, { graphqlPath } from './src/graphql';
-import app, { hostname, port } from './src/app';
+import { errors } from "graphql-response-parser";
+import app, { hostname, port } from "./src/app";
+import graphql, { graphqlPath } from "./src/graphql";
 import log from "./src/utils/log";
-import { errors } from "./src/utils/response";
 
 graphql
   .applyMiddleware({ app, path: graphqlPath, cors: true });
@@ -15,7 +15,7 @@ graphql
 app
   .listen(port, hostname, (error) => {
     if (error) {
-      log.error(error)
+      log.error(error);
     }
-    log.info(`>>> 🌎 Open ${hostname}:${port}${graphql.graphqlPath} in your browser.`)
+    log.info(`>>> 🌎 Open ${hostname}:${port}${graphql.graphqlPath} in your browser.`);
   });

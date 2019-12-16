@@ -1,13 +1,7 @@
-export default `
-directive @auth(roles: [Roles]) on FIELD_DEFINITION
+import gql from "graphql-tag";
 
-input UserInput {
-  displayName: String
-  email: String!
-  password: String!
-  photoURL: String
-  phoneNumber: String
-}
+export default gql`
+directive @auth(roles: [Roles]) on FIELD_DEFINITION
 
 type LoginResponse {
   idToken: String!

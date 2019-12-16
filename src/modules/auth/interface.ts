@@ -6,3 +6,8 @@ export interface ILoginResponse {
   localId: string;
   registered: boolean;
 }
+
+export interface IAuthInput {
+  email: string;
+  password: string;
+}

@@ -1,20 +1,25 @@
 import { ExpressContext } from "apollo-server-express/dist/ApolloServer";
 import { IContext } from "../interfaces/IContext";
 import verifyIdToken from "../modules/auth/functions/verifyIdToken";
+import { IUser } from "../modules/user/interface";
 
-export default async ({ connection, req }: ExpressContext): Promise<IContext> => {
+const ENV = (process.env.NODE_ENV || "dev").toLowerCase();
+const DEV = (ENV !== "production") && (ENV !== "prod");
+
+export default async ({ connection, req, res }: ExpressContext): Promise<IContext> => {
+  const defaultContext = { req, res, DEV };
   if (connection) {
     return connection.context;
   }
   if (!req || !req.headers) {
-    return;
+    return defaultContext;
   }
   const token = req.headers.authorization || "";
 
-  let email;
+  let user = {} as IUser;
   if (token) {
-    email = (await verifyIdToken(token)).email || "";
+    user = await verifyIdToken(token);
   }
 
-  return { email, token };
+  return { ...defaultContext, token, user };
 };

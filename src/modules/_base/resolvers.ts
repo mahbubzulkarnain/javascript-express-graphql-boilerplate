@@ -1,5 +1,6 @@
+import { response } from "graphql-response-parser";
 import { IResponse } from "../../interfaces/IResponse";
-import response, { MOCK_RESULT } from "../../utils/response";
+import { MOCK_RESULT } from "../../utils/response";
 
 export default {
   Mutation: {

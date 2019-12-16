@@ -6,3 +6,8 @@ export interface IUser {
   providerId?: string;
   uid: string;
 }
+
+export interface IUserInput {
+  limit?: number;
+  pageToken?: string;
+}
